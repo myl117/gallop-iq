@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule, DecimalPipe, TitleCasePipe } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RaceService } from '../../core/services/race.service';
 import { PredictionService } from '../../core/services/prediction.service';
 import { RaceDetail } from '../../core/models/race.model';
@@ -12,7 +20,20 @@ import {
 @Component({
   selector: 'app-race-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, DecimalPipe],
+  imports: [
+    CommonModule,
+    RouterModule,
+    DecimalPipe,
+    TitleCasePipe,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatProgressBarModule,
+    MatTableModule,
+    MatDividerModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './race-detail.component.html',
   styleUrls: ['./race-detail.component.scss'],
 })
@@ -24,6 +45,8 @@ export class RaceDetailComponent implements OnInit {
   loadingPredictions = false;
   raceError: string | null = null;
   predictionError: string | null = null;
+
+  displayedColumns = ['number', 'horseName', 'jockey', 'trainer', 'age', 'form', 'odds'];
 
   constructor(
     private route: ActivatedRoute,
@@ -68,14 +91,18 @@ export class RaceDetailComponent implements OnInit {
     });
   }
 
-  getPredictionForHorse(horseName: string): HorsePrediction | undefined {
-    return this.predictionResult?.horses.find(
-      (h) => h.horseName.toLowerCase() === horseName.toLowerCase()
-    );
+  getProbabilityValue(prob: number): number {
+    return Math.round(prob * 100);
   }
 
   getProbabilityPercent(prob: number): string {
     return `${Math.round(prob * 100)}%`;
+  }
+
+  getConfidenceColor(confidence: string): 'primary' | 'accent' | 'warn' {
+    if (confidence === 'high')   return 'primary';
+    if (confidence === 'medium') return 'accent';
+    return 'warn';
   }
 
   goBack(): void {

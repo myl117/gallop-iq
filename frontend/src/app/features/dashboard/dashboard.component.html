@@ -1,108 +1,111 @@
 <div class="dashboard-page">
 
-  <!-- Page Header -->
+  <!-- ─── Page Header ──────────────────────────────── -->
   <div class="page-header fade-in">
-    <div class="page-title-row">
-      <h1 class="page-title">Today's Races</h1>
-      <span class="live-indicator">
-        <span class="live-dot"></span>
-        Live
-      </span>
-    </div>
-    <p class="page-date">{{ today | date: 'EEEE, MMMM d, y' }}</p>
-    <p class="page-subtitle">AI-powered predictions for every race</p>
+    <h1 class="mat-headline-4">Today's Races</h1>
+    <p class="mat-body-1 page-date">{{ today | date: 'EEEE, MMMM d, y' }}</p>
+    <p class="mat-body-2 page-subtitle">AI-powered predictions for every race</p>
   </div>
 
-  <!-- Stats Bar -->
+  <!-- ─── Stats Bar ─────────────────────────────────── -->
   <div class="stats-bar fade-in" *ngIf="!loading && !error">
-    <div class="stat-badge">
-      <span class="stat-icon">🏁</span>
-      {{ races.length }} race{{ races.length !== 1 ? 's' : '' }} today
-    </div>
-    <div class="stat-badge gemini-pill">
-      <span class="stat-icon">✨</span>
-      Powered by Gemini AI
-    </div>
+    <mat-chip-set>
+      <mat-chip>
+        <mat-icon matChipAvatar>flag</mat-icon>
+        {{ races.length }} race{{ races.length !== 1 ? 's' : '' }} today
+      </mat-chip>
+      <mat-chip color="primary" highlighted>
+        <mat-icon matChipAvatar>auto_awesome</mat-icon>
+        Powered by Gemini AI
+      </mat-chip>
+    </mat-chip-set>
   </div>
 
-  <!-- Loading: Skeleton Grid -->
-  <div class="race-grid skeleton-grid" *ngIf="loading">
-    <div class="skeleton-card" *ngFor="let s of skeletons">
-      <div class="skeleton-line" style="width: 60px; height: 32px; margin-bottom: 12px;"></div>
-      <div class="skeleton-line" style="width: 75%; height: 20px; margin-bottom: 8px;"></div>
-      <div class="skeleton-line" style="width: 90%; height: 14px; margin-bottom: 16px;"></div>
-      <div style="display:flex; gap: 8px; margin-bottom: 20px;">
-        <div class="skeleton-line" style="width: 60px; height: 24px; border-radius: 12px;"></div>
-        <div class="skeleton-line" style="width: 70px; height: 24px; border-radius: 12px;"></div>
-        <div class="skeleton-line" style="width: 50px; height: 24px; border-radius: 12px;"></div>
-      </div>
-      <div class="skeleton-footer">
+  <!-- ─── Loading: Skeleton Grid ───────────────────── -->
+  <div class="race-grid" *ngIf="loading">
+    <mat-card *ngFor="let s of skeletons" class="skeleton-card">
+      <mat-card-header>
+        <div class="skeleton-line" style="width: 60px; height: 20px; margin-bottom: 8px;"></div>
+        <div class="skeleton-line" style="width: 55%; height: 16px;"></div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="skeleton-line" style="width: 90%; height: 14px; margin: 16px 0 8px;"></div>
+        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+          <div class="skeleton-line" style="width: 60px; height: 24px; border-radius: 16px;"></div>
+          <div class="skeleton-line" style="width: 70px; height: 24px; border-radius: 16px;"></div>
+          <div class="skeleton-line" style="width: 50px; height: 24px; border-radius: 16px;"></div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
         <div class="skeleton-line" style="width: 80px; height: 16px;"></div>
-        <div class="skeleton-line" style="width: 110px; height: 32px; border-radius: 16px;"></div>
-      </div>
-    </div>
+        <div class="skeleton-line" style="width: 110px; height: 36px; border-radius: 4px; margin-left: auto;"></div>
+      </mat-card-actions>
+    </mat-card>
   </div>
 
-  <!-- Error State -->
-  <div class="error-card fade-in" *ngIf="error && !loading">
-    <div class="error-icon">⚠️</div>
-    <h3 class="error-title">Unable to Load Races</h3>
-    <p class="error-message">{{ error }}</p>
-  </div>
+  <!-- ─── Error State ───────────────────────────────── -->
+  <mat-card class="state-card fade-in" *ngIf="error && !loading">
+    <mat-card-content class="state-content">
+      <mat-icon class="state-icon warn-icon">warning</mat-icon>
+      <h2 class="mat-title">Unable to Load Races</h2>
+      <p class="mat-body-1">{{ error }}</p>
+    </mat-card-content>
+  </mat-card>
 
-  <!-- Empty State -->
-  <div class="empty-state fade-in" *ngIf="!loading && !error && races.length === 0">
-    <div class="empty-icon">🏇</div>
-    <h3 class="empty-title">No Races Today</h3>
-    <p class="empty-subtitle">There are no scheduled races available right now. Check back later.</p>
-  </div>
+  <!-- ─── Empty State ───────────────────────────────── -->
+  <mat-card class="state-card fade-in" *ngIf="!loading && !error && races.length === 0">
+    <mat-card-content class="state-content">
+      <mat-icon class="state-icon">event_busy</mat-icon>
+      <h2 class="mat-title">No Races Today</h2>
+      <p class="mat-body-1">There are no scheduled races available right now. Check back later.</p>
+    </mat-card-content>
+  </mat-card>
 
-  <!-- Race Grid -->
+  <!-- ─── Race Grid ─────────────────────────────────── -->
   <div class="race-grid" *ngIf="!loading && !error && races.length > 0">
-    <div
+    <mat-card
       class="race-card fade-in"
       *ngFor="let race of races; trackBy: trackByRace; let i = index"
       [style.animation-delay]="getAnimationDelay(i)"
     >
-      <!-- Card Top Accent (shown on hover via CSS) -->
-      <div class="card-accent"></div>
+      <mat-card-header>
+        <mat-card-title>{{ race.offTime }}</mat-card-title>
+        <mat-card-subtitle>{{ race.courseName }}</mat-card-subtitle>
+      </mat-card-header>
 
-      <!-- Time -->
-      <div class="race-time">{{ race.offTime }}</div>
+      <mat-card-content>
+        <p class="race-name mat-body-2">{{ race.raceName }}</p>
 
-      <!-- Course & Race Name -->
-      <div class="race-course">{{ race.courseName }}</div>
-      <div class="race-name">{{ race.raceName }}</div>
+        <mat-chip-set class="race-chips">
+          <mat-chip *ngIf="race.distance">
+            <mat-icon matChipAvatar>straighten</mat-icon>
+            {{ race.distance }}
+          </mat-chip>
+          <mat-chip *ngIf="race.going" [color]="getGoingColor(race.going)" [highlighted]="!!race.going">
+            {{ race.going }}
+          </mat-chip>
+          <mat-chip *ngIf="race.raceClass">
+            Class {{ race.raceClass }}
+          </mat-chip>
+          <mat-chip *ngIf="race.regionCode">
+            {{ race.regionCode }}
+          </mat-chip>
+        </mat-chip-set>
+      </mat-card-content>
 
-      <!-- Badges -->
-      <div class="badges">
-        <span class="badge" *ngIf="race.distance">📏 {{ race.distance }}</span>
-        <span
-          class="badge"
-          [ngClass]="getGoingClass(race.going)"
-          *ngIf="race.going"
-          >{{ race.going }}</span
-        >
-        <span class="badge" *ngIf="race.raceClass">Cls {{ race.raceClass }}</span>
-        <span class="badge region-badge" *ngIf="race.regionCode">{{ race.regionCode }}</span>
-      </div>
+      <mat-divider></mat-divider>
 
-      <!-- Footer -->
-      <div class="card-footer">
-        <span class="runner-count">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
+      <mat-card-actions align="end">
+        <span class="runner-count mat-body-2">
+          <mat-icon>group</mat-icon>
           {{ race.runnerCount }} runner{{ race.runnerCount !== 1 ? 's' : '' }}
         </span>
-        <a [routerLink]="['/race', race.raceId]" class="analyse-btn">
-          Analyse Race →
+        <a [routerLink]="['/race', race.raceId]" mat-raised-button color="primary">
+          Analyse Race
+          <mat-icon iconPositionEnd>arrow_forward</mat-icon>
         </a>
-      </div>
-    </div>
+      </mat-card-actions>
+    </mat-card>
   </div>
 
 </div>

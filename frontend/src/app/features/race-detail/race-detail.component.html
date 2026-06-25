@@ -1,194 +1,241 @@
 <div class="detail-page">
 
-  <!-- Back Button -->
-  <button class="back-btn" (click)="goBack()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <path d="M19 12H5M12 5l-7 7 7 7"/>
-    </svg>
+  <!-- ─── Back Button ──────────────────────────── -->
+  <button mat-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
     Back to Races
   </button>
 
-  <!-- ─── Race Loading ───────────────────────── -->
-  <div class="loading-center fade-in" *ngIf="loadingRace">
-    <div class="spinner"></div>
-    <p class="loading-text">Loading race details…</p>
+  <!-- ─── Race Loading ──────────────────────────── -->
+  <div class="centered fade-in" *ngIf="loadingRace">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p class="mat-body-1 loading-text">Loading race details…</p>
   </div>
 
-  <!-- ─── Race Error ────────────────────────── -->
-  <div class="error-card fade-in" *ngIf="raceError && !loadingRace">
-    <div class="error-icon">⚠️</div>
-    <h3>Race Not Found</h3>
-    <p>{{ raceError }}</p>
-    <button class="retry-btn" (click)="goBack()">← Go Back</button>
-  </div>
+  <!-- ─── Race Error ────────────────────────────── -->
+  <mat-card class="state-card fade-in" *ngIf="raceError && !loadingRace">
+    <mat-card-content class="state-content">
+      <mat-icon class="state-icon warn-icon">error_outline</mat-icon>
+      <h2 class="mat-title">Race Not Found</h2>
+      <p class="mat-body-1">{{ raceError }}</p>
+      <button mat-raised-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Go Back
+      </button>
+    </mat-card-content>
+  </mat-card>
 
-  <!-- ─── Race Content ──────────────────────── -->
-  <div *ngIf="race && !loadingRace">
+  <!-- ─── Race Content ──────────────────────────── -->
+  <div *ngIf="race && !loadingRace" class="fade-in">
 
-    <!-- Race Header Card -->
-    <div class="race-header glass fade-in">
-      <div class="race-header-top">
-        <div class="race-header-left">
-          <h1 class="race-course-name">{{ race.courseName }}</h1>
-          <p class="race-detail-name">{{ race.raceName }}</p>
-          <div class="badges" style="margin-top: 12px;">
-            <span class="badge" *ngIf="race.distance">📏 {{ race.distance }}</span>
-            <span class="badge going-badge" *ngIf="race.going">⛳ {{ race.going }}</span>
-            <span class="badge" *ngIf="race.raceClass">Class {{ race.raceClass }}</span>
-            <span class="badge region-badge" *ngIf="race.regionCode">{{ race.regionCode }}</span>
-          </div>
+    <!-- ─── Race Header ───────────────────────── -->
+    <mat-card class="race-header-card">
+      <mat-card-header>
+        <mat-card-title>{{ race.courseName }}</mat-card-title>
+        <mat-card-subtitle>{{ race.raceName }}</mat-card-subtitle>
+
+        <span class="header-spacer"></span>
+
+        <div class="race-time-block">
+          <span class="race-time mat-headline-5">{{ race.offTime }}</span>
+          <span class="mat-body-2 runner-label">
+            <mat-icon>group</mat-icon>
+            {{ race.runnerCount }} runners
+          </span>
         </div>
-        <div class="race-header-right">
-          <div class="race-time-display">{{ race.offTime }}</div>
-          <div class="runner-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            {{ race.runnerCount }} Runners
-          </div>
-        </div>
-      </div>
-    </div>
+      </mat-card-header>
 
-    <!-- ─── AI Predictions Section ──────────── -->
-    <section class="predictions-section fade-in">
+      <mat-card-content>
+        <mat-chip-set>
+          <mat-chip *ngIf="race.distance">
+            <mat-icon matChipAvatar>straighten</mat-icon>
+            {{ race.distance }}
+          </mat-chip>
+          <mat-chip *ngIf="race.going">{{ race.going }}</mat-chip>
+          <mat-chip *ngIf="race.raceClass">Class {{ race.raceClass }}</mat-chip>
+          <mat-chip *ngIf="race.regionCode">{{ race.regionCode }}</mat-chip>
+        </mat-chip-set>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- ─── AI Predictions ───────────────────── -->
+    <section class="section">
       <div class="section-header">
-        <h2 class="section-title">✨ AI Race Analysis</h2>
-        <span class="gemini-badge">Powered by Gemini</span>
+        <h2 class="mat-title section-title">
+          <mat-icon color="primary">auto_awesome</mat-icon>
+          AI Race Analysis
+        </h2>
+        <mat-chip color="primary" highlighted>Powered by Gemini</mat-chip>
       </div>
 
       <!-- Prediction Loading -->
-      <div class="pred-loading glass" *ngIf="loadingPredictions">
-        <div class="pred-spinner"></div>
-        <p class="pred-loading-text">Gemini is analysing the runners…</p>
-        <p class="pred-loading-sub">Evaluating form, going preferences, trainer trends, and more</p>
-      </div>
+      <mat-card *ngIf="loadingPredictions">
+        <mat-card-content class="state-content">
+          <mat-spinner diameter="40" color="primary"></mat-spinner>
+          <p class="mat-body-1" style="margin: 0;">Gemini is analysing the runners…</p>
+          <p class="mat-body-2" style="margin: 0; color: rgba(0,0,0,0.54);">
+            Evaluating form, going preferences, trainer trends, and more
+          </p>
+        </mat-card-content>
+      </mat-card>
 
       <!-- Prediction Error -->
-      <div class="pred-error-card" *ngIf="predictionError && !loadingPredictions">
-        <div class="error-icon">🤖</div>
-        <h3>Prediction Failed</h3>
-        <p>{{ predictionError }}</p>
-        <button class="retry-btn" (click)="loadPredictions()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="23 4 23 10 17 10"/>
-            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-          </svg>
-          Retry Analysis
-        </button>
-      </div>
+      <mat-card *ngIf="predictionError && !loadingPredictions">
+        <mat-card-content class="state-content">
+          <mat-icon class="state-icon warn-icon">smart_toy</mat-icon>
+          <h3 class="mat-title" style="margin: 0;">Prediction Failed</h3>
+          <p class="mat-body-1" style="margin: 0; color: rgba(0,0,0,0.6);">{{ predictionError }}</p>
+          <button mat-raised-button color="primary" (click)="loadPredictions()">
+            <mat-icon>refresh</mat-icon>
+            Retry Analysis
+          </button>
+        </mat-card-content>
+      </mat-card>
 
       <!-- Prediction Cards -->
       <div
         class="prediction-list"
         *ngIf="predictionResult && !loadingPredictions && !predictionError"
       >
-        <div
+        <mat-card
           class="prediction-card"
           [class.best-pick]="h.isBestPick"
           *ngFor="let h of sortedPredictions; trackBy: trackByHorse; let i = index"
         >
-          <!-- Gold bar for best pick -->
-          <div class="best-pick-banner" *ngIf="h.isBestPick"></div>
+          <mat-card-header>
+            <div matCardAvatar class="horse-rank" [class.rank-primary]="i === 0">
+              {{ i + 1 }}
+            </div>
 
-          <!-- Best Pick Label -->
-          <div class="best-pick-label" *ngIf="h.isBestPick">
-            🏆 AI Top Pick
-          </div>
-
-          <!-- Horse Header -->
-          <div class="horse-header">
-            <div class="horse-rank" [class.rank-1]="i === 0">{{ i + 1 }}</div>
-            <div class="horse-name-block">
-              <div class="horse-name">{{ h.horseName }}</div>
-              <!-- Runner info if race data available -->
-              <div class="runner-info" *ngIf="race">
+            <mat-card-title>{{ h.horseName }}</mat-card-title>
+            <mat-card-subtitle>
+              <ng-container *ngIf="race">
                 <ng-container *ngFor="let runner of race.runners">
                   <ng-container *ngIf="runner.horseName.toLowerCase() === h.horseName.toLowerCase()">
-                    <span *ngIf="runner.jockey">🧑 {{ runner.jockey }}</span>
-                    <span *ngIf="runner.trainer">🏋️ {{ runner.trainer }}</span>
-                    <span *ngIf="runner.form" class="form-text">Form: {{ runner.form }}</span>
-                    <span *ngIf="runner.odds" class="odds-text">{{ runner.odds }}</span>
+                    <span *ngIf="runner.jockey">{{ runner.jockey }}</span>
+                    <span *ngIf="runner.trainer"> · {{ runner.trainer }}</span>
                   </ng-container>
                 </ng-container>
-              </div>
-            </div>
-          </div>
+              </ng-container>
+            </mat-card-subtitle>
 
-          <!-- Probability Bar -->
-          <div class="probability-section">
-            <div class="probability-label">
-              <span>Win Probability</span>
-              <span class="prob-value">{{ getProbabilityPercent(h.winProbability) }}</span>
-            </div>
-            <div class="probability-bar-track">
-              <div
-                class="probability-bar-fill"
-                [class.best-pick-bar]="h.isBestPick"
-                [style.width]="getProbabilityPercent(h.winProbability)"
-              ></div>
-            </div>
-          </div>
+            <span class="header-spacer"></span>
 
-          <!-- Meta: Confidence + Value -->
-          <div class="prediction-meta">
-            <span
-              class="confidence-badge"
-              [class.confidence-high]="h.confidence === 'high'"
-              [class.confidence-medium]="h.confidence === 'medium'"
-              [class.confidence-low]="h.confidence === 'low'"
+            <mat-chip
+              *ngIf="h.isBestPick"
+              color="primary"
+              highlighted
+              class="best-pick-chip"
             >
-              {{ h.confidence | titlecase }} Confidence
-            </span>
-            <span class="value-score">
-              ⚡ Value: {{ h.valueScore | number:'1.1-1' }}/10
-            </span>
-          </div>
+              <mat-icon matChipAvatar>emoji_events</mat-icon>
+              Top Pick
+            </mat-chip>
+          </mat-card-header>
 
-          <!-- Reasoning -->
-          <p class="reasoning">{{ h.reasoning }}</p>
-        </div>
+          <mat-card-content>
+            <!-- Probability Bar -->
+            <div class="probability-section">
+              <div class="probability-label">
+                <span class="mat-body-2">Win Probability</span>
+                <span class="mat-body-1 prob-value">{{ getProbabilityPercent(h.winProbability) }}</span>
+              </div>
+              <mat-progress-bar
+                mode="determinate"
+                [value]="getProbabilityValue(h.winProbability)"
+                [color]="h.isBestPick ? 'primary' : 'accent'"
+              ></mat-progress-bar>
+            </div>
+
+            <!-- Meta row -->
+            <div class="meta-row">
+              <mat-chip
+                [color]="getConfidenceColor(h.confidence)"
+                [highlighted]="true"
+              >
+                {{ h.confidence | titlecase }} Confidence
+              </mat-chip>
+              <span class="mat-body-2 value-score">
+                <mat-icon>bolt</mat-icon>
+                Value: {{ h.valueScore | number:'1.1-1' }}/10
+              </span>
+            </div>
+
+            <!-- Reasoning -->
+            <mat-divider></mat-divider>
+            <p class="mat-body-2 reasoning">{{ h.reasoning }}</p>
+
+            <!-- Runner details row -->
+            <div class="runner-details mat-body-2" *ngIf="race">
+              <ng-container *ngFor="let runner of race.runners">
+                <ng-container *ngIf="runner.horseName.toLowerCase() === h.horseName.toLowerCase()">
+                  <span *ngIf="runner.form" class="detail-chip">
+                    <mat-icon>history</mat-icon> Form: {{ runner.form }}
+                  </span>
+                  <span *ngIf="runner.odds" class="detail-chip odds">
+                    <mat-icon>attach_money</mat-icon> {{ runner.odds }}
+                  </span>
+                </ng-container>
+              </ng-container>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
     </section>
 
-    <!-- ─── Runners Table ──────────────────── -->
-    <section class="runners-section fade-in" *ngIf="race.runners && race.runners.length > 0">
+    <!-- ─── Runners Table ─────────────────────── -->
+    <section class="section" *ngIf="race.runners && race.runners.length > 0">
       <div class="section-header">
-        <h2 class="section-title">🐎 All Runners</h2>
-        <span class="runner-count-badge">{{ race.runners.length }} horses</span>
+        <h2 class="mat-title section-title">
+          <mat-icon>format_list_numbered</mat-icon>
+          All Runners
+        </h2>
+        <mat-chip>{{ race.runners.length }} horses</mat-chip>
       </div>
 
-      <div class="table-wrapper glass">
-        <table class="runners-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Horse</th>
-              <th>Jockey</th>
-              <th>Trainer</th>
-              <th>Age</th>
-              <th>Form</th>
-              <th>Odds</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let runner of race.runners; trackBy: trackByRunner; let i = index"
-            >
-              <td class="num-col">{{ runner.number ?? i + 1 }}</td>
-              <td class="horse-col">{{ runner.horseName }}</td>
-              <td class="muted-col">{{ runner.jockey ?? '—' }}</td>
-              <td class="muted-col">{{ runner.trainer ?? '—' }}</td>
-              <td class="muted-col">{{ runner.age ?? '—' }}</td>
-              <td class="form-col">{{ runner.form ?? '—' }}</td>
-              <td class="odds-col">{{ runner.odds ?? '—' }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <mat-card>
+        <mat-card-content style="padding: 0;">
+          <table mat-table [dataSource]="race.runners" class="runners-table">
+
+            <ng-container matColumnDef="number">
+              <th mat-header-cell *matHeaderCellDef>#</th>
+              <td mat-cell *matCellDef="let runner; let i = index">{{ runner.number ?? i + 1 }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="horseName">
+              <th mat-header-cell *matHeaderCellDef>Horse</th>
+              <td mat-cell *matCellDef="let runner" class="horse-col">{{ runner.horseName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="jockey">
+              <th mat-header-cell *matHeaderCellDef>Jockey</th>
+              <td mat-cell *matCellDef="let runner">{{ runner.jockey ?? '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="trainer">
+              <th mat-header-cell *matHeaderCellDef>Trainer</th>
+              <td mat-cell *matCellDef="let runner">{{ runner.trainer ?? '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="age">
+              <th mat-header-cell *matHeaderCellDef>Age</th>
+              <td mat-cell *matCellDef="let runner">{{ runner.age ?? '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="form">
+              <th mat-header-cell *matHeaderCellDef>Form</th>
+              <td mat-cell *matCellDef="let runner" class="form-col">{{ runner.form ?? '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="odds">
+              <th mat-header-cell *matHeaderCellDef>Odds</th>
+              <td mat-cell *matCellDef="let runner" class="odds-col">{{ runner.odds ?? '—' }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
     </section>
 
   </div>

@@ -1,13 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 import { RaceService } from '../../core/services/race.service';
 import { Race } from '../../core/models/race.model';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    MatButtonModule,
+    MatChipsModule,
+    MatIconModule,
+    MatDividerModule,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
@@ -35,19 +48,17 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  getGoingClass(going: string | undefined): string {
-    if (!going) return 'going-unknown';
+  getGoingColor(going: string | undefined): 'primary' | 'accent' | 'warn' | undefined {
+    if (!going) return undefined;
     const g = going.toLowerCase();
-    if (g.includes('firm') || g.includes('fast') || g.includes('hard'))
-      return 'going-firm';
-    if (g.includes('good')) return 'going-good';
-    if (g.includes('soft') || g.includes('heavy') || g.includes('yielding'))
-      return 'going-soft';
-    return 'going-unknown';
+    if (g.includes('firm') || g.includes('fast') || g.includes('hard')) return 'primary';
+    if (g.includes('good')) return 'accent';
+    if (g.includes('soft') || g.includes('heavy') || g.includes('yielding')) return 'warn';
+    return undefined;
   }
 
   getAnimationDelay(index: number): string {
-    return `${index * 60}ms`;
+    return `${index * 50}ms`;
   }
 
   trackByRace(_: number, race: Race): string {
