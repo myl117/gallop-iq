@@ -1,6 +1,6 @@
 # 🏇 Gallop IQ
 
-> AI-powered horse racing predictions — built with Angular, ASP.NET Core, and Google Gemini.
+> AI-powered horse racing predictions built with Angular, ASP.NET Core, and Google Gemini.
 
 ![Tech Stack](https://img.shields.io/badge/Frontend-Angular%2018-red?style=flat-square&logo=angular)
 ![Tech Stack](https://img.shields.io/badge/Backend-.NET%209-purple?style=flat-square&logo=dotnet)
@@ -11,7 +11,7 @@
 
 ## Overview
 
-Gallop IQ fetches live UK/IRE horse racing data from The Racing API, builds a feature set for each runner, and sends it to Google Gemini to generate structured AI predictions — including win probability, confidence ratings, and value scores for every horse in a race.
+Gallop IQ fetches live UK/IRE horse racing data from The Racing API, builds a feature set for each runner, and sends it to Google Gemini to generate structured AI predictions including win probability, confidence ratings, and value scores for every horse in a race.
 
 ---
 
@@ -25,7 +25,7 @@ gallop-iq/
 │       ├── DTOs/               # Data Transfer Objects
 │       ├── Services/           # Business logic (Racing API, Gemini, Predictions)
 │       ├── Stores/             # In-memory prediction cache
-│       ├── appsettings.json    # ⚠️ Contains API keys — do NOT commit
+│       ├── appsettings.json    # ⚠️ Contains API keys do NOT commit
 │       └── appsettings.example.json  # Safe template for version control
 ├── frontend/                   # Angular 18 standalone app
 │   ├── src/app/
@@ -152,10 +152,10 @@ gold-highlighted top pick
 
 ## Development Notes
 
-- **Predictions are in-memory only** — they reset when the backend restarts. Add a database (PostgreSQL + EF Core) to persist them.
-- **Free Racing API tier** — uses `/v1/racecards/free` which covers basic daily racecards for GB/IRE.
-- **Gemini JSON mode** — `response_mime_type: application/json` ensures Gemini always returns parseable JSON.
-- **CORS** — backend allows `http://localhost:4200` for local dev. Update for production.
+- **Predictions are in-memory only:** they reset when the backend restarts. Add a database (PostgreSQL + EF Core) to persist them.
+- **Free Racing API tier:** uses `/v1/racecards/free` which covers basic daily racecards for GB/IRE.
+- **Gemini JSON mode:** `response_mime_type: application/json` ensures Gemini always returns parseable JSON.
+- **CORS:** backend allows `http://localhost:4200` for local dev. Update for production.
 
 ---
 
@@ -177,4 +177,4 @@ gold-highlighted top pick
 
 ## License
 
-MIT — built for educational and personal use.
+MIT, built for educational and personal use.
