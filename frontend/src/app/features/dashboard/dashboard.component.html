@@ -1,0 +1,108 @@
+<div class="dashboard-page">
+
+  <!-- Page Header -->
+  <div class="page-header fade-in">
+    <div class="page-title-row">
+      <h1 class="page-title">Today's Races</h1>
+      <span class="live-indicator">
+        <span class="live-dot"></span>
+        Live
+      </span>
+    </div>
+    <p class="page-date">{{ today | date: 'EEEE, MMMM d, y' }}</p>
+    <p class="page-subtitle">AI-powered predictions for every race</p>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar fade-in" *ngIf="!loading && !error">
+    <div class="stat-badge">
+      <span class="stat-icon">🏁</span>
+      {{ races.length }} race{{ races.length !== 1 ? 's' : '' }} today
+    </div>
+    <div class="stat-badge gemini-pill">
+      <span class="stat-icon">✨</span>
+      Powered by Gemini AI
+    </div>
+  </div>
+
+  <!-- Loading: Skeleton Grid -->
+  <div class="race-grid skeleton-grid" *ngIf="loading">
+    <div class="skeleton-card" *ngFor="let s of skeletons">
+      <div class="skeleton-line" style="width: 60px; height: 32px; margin-bottom: 12px;"></div>
+      <div class="skeleton-line" style="width: 75%; height: 20px; margin-bottom: 8px;"></div>
+      <div class="skeleton-line" style="width: 90%; height: 14px; margin-bottom: 16px;"></div>
+      <div style="display:flex; gap: 8px; margin-bottom: 20px;">
+        <div class="skeleton-line" style="width: 60px; height: 24px; border-radius: 12px;"></div>
+        <div class="skeleton-line" style="width: 70px; height: 24px; border-radius: 12px;"></div>
+        <div class="skeleton-line" style="width: 50px; height: 24px; border-radius: 12px;"></div>
+      </div>
+      <div class="skeleton-footer">
+        <div class="skeleton-line" style="width: 80px; height: 16px;"></div>
+        <div class="skeleton-line" style="width: 110px; height: 32px; border-radius: 16px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-card fade-in" *ngIf="error && !loading">
+    <div class="error-icon">⚠️</div>
+    <h3 class="error-title">Unable to Load Races</h3>
+    <p class="error-message">{{ error }}</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state fade-in" *ngIf="!loading && !error && races.length === 0">
+    <div class="empty-icon">🏇</div>
+    <h3 class="empty-title">No Races Today</h3>
+    <p class="empty-subtitle">There are no scheduled races available right now. Check back later.</p>
+  </div>
+
+  <!-- Race Grid -->
+  <div class="race-grid" *ngIf="!loading && !error && races.length > 0">
+    <div
+      class="race-card fade-in"
+      *ngFor="let race of races; trackBy: trackByRace; let i = index"
+      [style.animation-delay]="getAnimationDelay(i)"
+    >
+      <!-- Card Top Accent (shown on hover via CSS) -->
+      <div class="card-accent"></div>
+
+      <!-- Time -->
+      <div class="race-time">{{ race.offTime }}</div>
+
+      <!-- Course & Race Name -->
+      <div class="race-course">{{ race.courseName }}</div>
+      <div class="race-name">{{ race.raceName }}</div>
+
+      <!-- Badges -->
+      <div class="badges">
+        <span class="badge" *ngIf="race.distance">📏 {{ race.distance }}</span>
+        <span
+          class="badge"
+          [ngClass]="getGoingClass(race.going)"
+          *ngIf="race.going"
+          >{{ race.going }}</span
+        >
+        <span class="badge" *ngIf="race.raceClass">Cls {{ race.raceClass }}</span>
+        <span class="badge region-badge" *ngIf="race.regionCode">{{ race.regionCode }}</span>
+      </div>
+
+      <!-- Footer -->
+      <div class="card-footer">
+        <span class="runner-count">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          {{ race.runnerCount }} runner{{ race.runnerCount !== 1 ? 's' : '' }}
+        </span>
+        <a [routerLink]="['/race', race.raceId]" class="analyse-btn">
+          Analyse Race →
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>

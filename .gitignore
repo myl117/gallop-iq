@@ -1,0 +1,56 @@
+# Gallop IQ — Root .gitignore
+
+# ===== SECRETS (NEVER COMMIT) =====
+backend/GallopIQ.Api/appsettings.json
+!backend/GallopIQ.Api/appsettings.example.json
+
+# ===== .NET =====
+*.user
+*.suo
+.vs/
+bin/
+obj/
+*.DotSettings.user
+*.ncrunch*
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.log
+*.tlog
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+*.nuget.props
+*.nuget.targets
+
+# ===== Node / Angular =====
+node_modules/
+dist/
+tmp/
+frontend/.angular/
+
+# Angular cache
+frontend/src/assets/*.generated.*
+
+# npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/

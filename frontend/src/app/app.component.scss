@@ -1,0 +1,61 @@
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 11, 15, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    transition: var(--transition);
+
+    .logo-icon {
+      font-size: 1.6rem;
+    }
+    .logo-text {
+      color: var(--text-primary);
+    }
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  .header-nav a {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    text-decoration: none;
+
+    &:hover,
+    &.active {
+      color: var(--text-primary);
+      background: var(--bg-card);
+    }
+  }
+}
+
+.app-main {
+  min-height: calc(100vh - 64px);
+}
